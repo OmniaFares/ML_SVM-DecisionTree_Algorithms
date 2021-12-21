@@ -85,6 +85,7 @@ b = 0
 iterations = 800
 alphas = [0.001, 0.01, 0.03, 0.1, 0.3]
 
+# start
 for a in alphas:
     Arr_of_acc = []
     features = []
