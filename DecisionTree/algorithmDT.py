@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 class Node():
+
     def __init__(self, feature_index=None, threshold=None, left=None, right=None, info_gain=None, value=None):
         self.feature_index = feature_index
         self.threshold = threshold
@@ -11,31 +12,41 @@ class Node():
         self.value = value
 
 class DecisionTree():
+
     def __init__(self):
         self.root = None
+        self.depth = 0
 
-    def build_tree(self, dataset):
+    def build_tree(self, dataset, curr_depth=0):
         X, Y = dataset[:, 1:], dataset[:, 0]
         num_samples, num_features = np.shape(X)
         best_split = self.get_best_split(dataset, num_features)
-        if("info_gain" in best_split):
-            if best_split['info_gain'] > 0:
-                left_subtree = self.build_tree(best_split["dataset_left"])
-                right_subtree = self.build_tree(best_split["dataset_right"])
-                return Node(best_split["feature_index"], best_split["threshold"],
-                            left_subtree, right_subtree, best_split["info_gain"])
-        leaf_value = np.unique(Y)
+        if best_split['info_gain'] > 0:
+            left_subtree = self.build_tree(best_split["dataset_left"], curr_depth + 1)
+            right_subtree = self.build_tree(best_split["dataset_right"], curr_depth + 1)
+            return Node(best_split["feature_index"], best_split["threshold"],
+                        left_subtree, right_subtree, best_split["info_gain"])
+
+        if len(np.unique(Y)) > 1:
+            leaf_value = ['democrat']
+        else:
+            leaf_value = np.unique(Y)
+
+        if(curr_depth > self.depth):
+            self.depth = curr_depth
         return Node(value=leaf_value)
 
     def get_best_split(self, dataset, num_features):
         best_split = {}
+        best_split["info_gain"] = 0
         max_info_gain = -float("inf")
-        for feature_index in range(num_features):
+        for feature_index in range(num_features): #0-15 after add one 1-16
             feature_index += 1
             dataset_left, dataset_right = self.split(dataset, feature_index)
             if len(dataset_left) > 0 and len(dataset_right) > 0:
                 y, left_y, right_y = dataset[:, 0], dataset_left[:, 0], dataset_right[:, 0]
                 curr_info_gain = self.information_gain(y, left_y, right_y)
+                #print(curr_info_gain)
                 if curr_info_gain > max_info_gain:
                     best_split["feature_index"] = feature_index
                     best_split["threshold"] = "y"
@@ -43,6 +54,12 @@ class DecisionTree():
                     best_split["dataset_right"] = dataset_right
                     best_split["info_gain"] = curr_info_gain
                     max_info_gain = curr_info_gain
+        #     else:
+        #         for row in dataset:
+        #             print(row[feature_index])
+        #             print(row[0])
+        #         print("----------------------")
+        # print("-----------------------------------")
         return best_split
 
     def split(self, dataset, feature_index):
@@ -82,16 +99,16 @@ class DecisionTree():
 
     def make_prediction(self, x, tree):
         if tree.value != None: return tree.value
-        feature_val = x[tree.feature_index]
+        feature_val = x[tree.feature_index - 1]
         if feature_val == tree.threshold:
             return self.make_prediction(x, tree.left)
         else:
             return self.make_prediction(x, tree.right)
 
     def fit(self, X, Y):
-        # dataset = np.concatenate((X, Y), axis=1)
-        dataset = np.hstack((X,np.array([Y]).T))
+        dataset = np.concatenate((Y, X), axis=1)
         self.root = self.build_tree(dataset)
+        print(self.depth , "----------")
 
 
 pd.options.mode.chained_assignment = None
@@ -115,15 +132,45 @@ data = pd.read_csv('house-votes.csv')
 x = data.iloc[:, data.columns != 'name']
 x = add_missing_values(x)
 y = data.iloc[:, 0]
-ratio = 0.25
+
+ratio = 0.7
+
 x_train, x_test, y_train, y_test = split_data(ratio, x, y)
+
+x_train = x_train.values
+x_test = x_test.values
+y_train = y_train.values.reshape(-1,1)
+y_test = y_test.values.reshape(-1,1)
+
+# d = {}
+# for rowx, rowy in zip(x_train, y_train):
+#     rx = tuple(rowx)
+#     if rx in d:
+#         print(rowy, rx)
+#         print(d[rx])
+#         print("-----------")
+#     else:
+#         d[rx] = rowy
+
+# d = {}
+# for rowx, rowy in zip(x_test, y_test):
+#     rx = tuple(rowx)
+#     if rx in d:
+#         print(rowy, rx)
+#         print(d[rx])
+#         print("-----------")
+#     else:
+#         d[rx] = rowy
 
 
 classifier = DecisionTree()
 classifier.fit(x_train,y_train)
-classifier.print_tree()
+#classifier.print_tree()
 
 Y_pred = classifier.predict(x_test)
+# for yt,yp in zip(y_test,Y_pred):
+#     print(yt,yp)
+
 acc = np.sum(np.equal(y_test, Y_pred)) / len(Y_pred)
 
 print(acc)
