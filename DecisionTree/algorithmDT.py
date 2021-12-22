@@ -18,11 +18,12 @@ class DecisionTree():
         X, Y = dataset[:, 1:], dataset[:, 0]
         num_samples, num_features = np.shape(X)
         best_split = self.get_best_split(dataset, num_features)
-        if best_split["info_gain"] > 0:
-            left_subtree = self.build_tree(best_split["dataset_left"])
-            right_subtree = self.build_tree(best_split["dataset_right"])
-            return Node(best_split["feature_index"], best_split["threshold"],
-                        left_subtree, right_subtree, best_split["info_gain"])
+        if("info_gain" in best_split):
+            if best_split['info_gain'] > 0:
+                left_subtree = self.build_tree(best_split["dataset_left"])
+                right_subtree = self.build_tree(best_split["dataset_right"])
+                return Node(best_split["feature_index"], best_split["threshold"],
+                            left_subtree, right_subtree, best_split["info_gain"])
         leaf_value = np.unique(Y)
         return Node(value=leaf_value)
 
@@ -88,7 +89,8 @@ class DecisionTree():
             return self.make_prediction(x, tree.right)
 
     def fit(self, X, Y):
-        dataset = np.concatenate((X, Y), axis=1)
+        # dataset = np.concatenate((X, Y), axis=1)
+        dataset = np.hstack((X,np.array([Y]).T))
         self.root = self.build_tree(dataset)
 
 
