@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+pd.options.mode.chained_assignment = None
+
 class Node():
 
     def __init__(self, feature_index=None, threshold=None, left=None, right=None, info_gain=None, value=None):
@@ -13,28 +15,35 @@ class Node():
 
 class DecisionTree():
 
-    def __init__(self):
+    def __init__(self, max_depth = 16):
         self.root = None
         self.depth = 0
+        self.max_depth = max_depth
 
     def build_tree(self, dataset, curr_depth=0):
         X, Y = dataset[:, 1:], dataset[:, 0]
         num_samples, num_features = np.shape(X)
         best_split = self.get_best_split(dataset, num_features)
-        if best_split['info_gain'] > 0:
+        if best_split['info_gain'] > 0 and curr_depth < self.max_depth:
             left_subtree = self.build_tree(best_split["dataset_left"], curr_depth + 1)
             right_subtree = self.build_tree(best_split["dataset_right"], curr_depth + 1)
             return Node(best_split["feature_index"], best_split["threshold"],
                         left_subtree, right_subtree, best_split["info_gain"])
 
-        if len(np.unique(Y)) > 1:
-            leaf_value = ['democrat']
-        else:
-            leaf_value = np.unique(Y)
-
-        if(curr_depth > self.depth):
+        leaf_value = self.get_average(Y)
+        if curr_depth > self.depth:
             self.depth = curr_depth
         return Node(value=leaf_value)
+
+    def get_average(self, Y):
+        democrat = 0
+        republican = 0
+        for item in Y:
+            if item == 'republican':
+                republican += 1
+            else:
+                democrat += 1
+        return ['democrat'] if democrat > republican else ['republican']
 
     def get_best_split(self, dataset, num_features):
         best_split = {}
@@ -46,7 +55,6 @@ class DecisionTree():
             if len(dataset_left) > 0 and len(dataset_right) > 0:
                 y, left_y, right_y = dataset[:, 0], dataset_left[:, 0], dataset_right[:, 0]
                 curr_info_gain = self.information_gain(y, left_y, right_y)
-                #print(curr_info_gain)
                 if curr_info_gain > max_info_gain:
                     best_split["feature_index"] = feature_index
                     best_split["threshold"] = "y"
@@ -54,12 +62,6 @@ class DecisionTree():
                     best_split["dataset_right"] = dataset_right
                     best_split["info_gain"] = curr_info_gain
                     max_info_gain = curr_info_gain
-        #     else:
-        #         for row in dataset:
-        #             print(row[feature_index])
-        #             print(row[0])
-        #         print("----------------------")
-        # print("-----------------------------------")
         return best_split
 
     def split(self, dataset, feature_index):
@@ -81,18 +83,6 @@ class DecisionTree():
             entropy += -p_cls * np.log2(p_cls)
         return entropy
 
-    def print_tree(self, tree=None, indent=" "):
-        if not tree:
-            tree = self.root
-        if tree.value is not None:
-            print(tree.value)
-        else:
-            print("X_" + str(tree.feature_index), "<=", tree.threshold, "?", tree.info_gain)
-            print("%sleft:" % (indent), end="")
-            self.print_tree(tree.left, indent + indent)
-            print("%sright:" % (indent), end="")
-            self.print_tree(tree.right, indent + indent)
-
     def predict(self, X):
         preditions = [self.make_prediction(x, self.root) for x in X]
         return preditions
@@ -108,11 +98,7 @@ class DecisionTree():
     def fit(self, X, Y):
         dataset = np.concatenate((Y, X), axis=1)
         self.root = self.build_tree(dataset)
-        print(self.depth , "----------")
-
-
-pd.options.mode.chained_assignment = None
-
+        return self.depth
 
 def add_missing_values(x):
     for column in x:
@@ -122,55 +108,65 @@ def add_missing_values(x):
 
 def split_data(ratio, x, y):
     x_train = x.sample(frac = ratio)
-    x_test = x.drop(x_train.index)
+    x_test = x.drop(x_train.index).values
+    x_train = x_train.values
+
     y_train = y.sample(frac = ratio)
-    y_test = y.drop(y_train.index)
+    y_test = y.drop(y_train.index).values.reshape(-1, 1)
+    y_train = y_train.values.reshape(-1, 1)
+
     return x_train, x_test, y_train, y_test
 
+def perform(ratio, x, y):
+    x_train, x_test, y_train, y_test = split_data(ratio, x, y)
+
+    classifier = DecisionTree()
+    depth = classifier.fit(x_train, y_train)
+    Y_pred = classifier.predict(x_test)
+
+    acc = np.sum(np.equal(y_test, Y_pred)) / len(Y_pred)
+    return acc, depth
 
 data = pd.read_csv('house-votes.csv')
 x = data.iloc[:, data.columns != 'name']
 x = add_missing_values(x)
 y = data.iloc[:, 0]
 
-ratio = 0.7
+ratio = 0.25
+print("point 1:")
+for i in range(5):
+    acc, depth = perform(ratio, x, y)
+    print("depth tree = ", depth, "accuracy = ", acc)
 
-x_train, x_test, y_train, y_test = split_data(ratio, x, y)
+print("point 2:")
+print("ratio in range (30-70%)")
+ratio = 0.3
+mean_depth = 0
+mean_acc = 0
+min_depth = 17
+min_acc = 1
+max_depth = -1
+max_acc = -1
+for i in range(5):
+    acc, depth = perform(ratio, x, y)
+    if acc > max_acc:
+        max_acc = acc
+    if acc < min_acc:
+        min_acc = acc
+    if depth > max_depth:
+        max_depth = depth
+    if depth < min_depth:
+        min_depth = depth
+    mean_acc += acc
+    mean_depth += depth
+    ratio += 0.1
 
-x_train = x_train.values
-x_test = x_test.values
-y_train = y_train.values.reshape(-1,1)
-y_test = y_test.values.reshape(-1,1)
+mean_depth /= 5
+mean_acc /= 5
 
-# d = {}
-# for rowx, rowy in zip(x_train, y_train):
-#     rx = tuple(rowx)
-#     if rx in d:
-#         print(rowy, rx)
-#         print(d[rx])
-#         print("-----------")
-#     else:
-#         d[rx] = rowy
-
-# d = {}
-# for rowx, rowy in zip(x_test, y_test):
-#     rx = tuple(rowx)
-#     if rx in d:
-#         print(rowy, rx)
-#         print(d[rx])
-#         print("-----------")
-#     else:
-#         d[rx] = rowy
-
-
-classifier = DecisionTree()
-classifier.fit(x_train,y_train)
-#classifier.print_tree()
-
-Y_pred = classifier.predict(x_test)
-# for yt,yp in zip(y_test,Y_pred):
-#     print(yt,yp)
-
-acc = np.sum(np.equal(y_test, Y_pred)) / len(Y_pred)
-
-print(acc)
+print("Mean Accuracy : ", mean_acc)
+print("Max Accuracy : ", max_acc)
+print("Min Accuracy : ", min_acc)
+print("Mean Depth : ", mean_depth)
+print("Max Depth : ", max_depth)
+print("Min Depth : ", min_depth)
