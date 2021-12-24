@@ -128,35 +128,40 @@ def perform(ratio, data):
 def point_one():
     ratio = 0.25
     print("Point 1:")
+    print("-------------------------------")
+    print(" Five different random experiments with ratio  = ", ratio)
     for i in range(5):
         acc, depth = perform(ratio, data)
-        print(" Depth tree = ", depth, "Accuracy = ", acc * 100)
+        print("  Depth tree = ", depth, ", Accuracy = ", acc * 100)
 
 
 def point_two():
-    ratio, mean_depth, mean_acc, min_depth, min_acc, max_depth, max_acc = 0.3, 0, 0, 17, 1, -1, -1
+    print("\nPoint 2:")
+    print("-------------------------------")
+    ratio = 0.3
+    for J in range(5):
+        mean_depth, mean_acc, min_depth, min_acc, max_depth, max_acc = 0, 0, 17, 1, -1, -1
 
-    print("\nPoint 2 ratio in range (30-70%) :")
-
-    for i in range(5):
-        acc, depth = perform(ratio, data)
-        if acc > max_acc:  max_acc = acc
-        if acc < min_acc:  min_acc = acc
-        if depth > max_depth:  max_depth = depth
-        if depth < min_depth:  min_depth = depth
-        mean_acc += acc
-        mean_depth += depth
+        print(" Report of five different random experiments with ratio  = ", ratio)
+        for i in range(5):
+            acc, depth = perform(ratio, data)
+            if acc > max_acc:  max_acc = acc
+            if acc < min_acc:  min_acc = acc
+            if depth > max_depth:  max_depth = depth
+            if depth < min_depth:  min_depth = depth
+            mean_acc += acc
+            mean_depth += depth
         ratio += 0.1
 
-    mean_depth /= 5
-    mean_acc /= 5
+        mean_depth /= 5
+        mean_acc /= 5
 
-    print(" Mean Accuracy : ", mean_acc * 100)
-    print(" Max Accuracy : ", max_acc * 100)
-    print(" Min Accuracy : ", min_acc * 100)
-    print(" Mean Depth : ", mean_depth)
-    print(" Max Depth : ", max_depth)
-    print(" Min Depth : ", min_depth)
+        print("  Mean Accuracy : ", mean_acc * 100)
+        print("  Max Accuracy : ", max_acc * 100)
+        print("  Min Accuracy : ", min_acc * 100)
+        print("  Mean Depth : ", mean_depth)
+        print("  Max Depth : ", max_depth)
+        print("  Min Depth : ", min_depth)
 
 
 data = pd.read_csv('house-votes.csv')
