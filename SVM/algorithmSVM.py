@@ -61,7 +61,7 @@ def gradient_descent(lamda, w, b, alpha, x, y, iterations):
 
 def find_different_features(dataset):
     combinations = []
-    for i in range(1, 14):
+    for i in range(1, 11):
         new_features_group = list(itertools.combinations(dataset, i))
         combinations.append(new_features_group)
     features = []
@@ -72,7 +72,7 @@ def find_different_features(dataset):
 
 
 FullData['target'] = convert_y(FullData['target'])
-Train_data, Test_data = split_data(FullData)
+(Train_data, Test_data) = split_data(FullData)
 
 Y_train = np.array(Train_data['target']).flatten()
 Y_test = np.array(Test_data['target']).flatten()
@@ -83,14 +83,14 @@ random.shuffle(X)
 lamda = 0.001
 b = 0
 iterations = 800
-alphas = [0.001, 0.01, 0.03, 0.1, 0.3]
+alphas = [0.001, 0.01, 0.03, 0.3]
 
 # start
 for a in alphas:
     Arr_of_acc = []
     features = []
 
-    for i in range(15):
+    for i in range(8):
         X_train = Train_data[X[i]]
         X_test = Test_data[X[i]]
 
