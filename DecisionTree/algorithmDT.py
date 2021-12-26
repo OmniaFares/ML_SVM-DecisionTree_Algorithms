@@ -125,24 +125,31 @@ def perform(ratio, data):
     return acc, depth
 
 
-def point_one():
+def point_one(file):
     ratio = 0.25
     print("Point 1:")
+    file.write("\nPoint 1:")
     print("-------------------------------")
+    file.write("\n-------------------------------")
     print(" Five different random experiments with ratio  = ", ratio)
+    file.write("%s %s" % (" \nFive different random experiments with ratio  = ", ratio))
     for i in range(5):
         acc, depth = perform(ratio, data)
         print("  Depth tree = ", depth, ", Accuracy = ", acc * 100)
+        file.write("%s %s %s %s " % ("  \nDepth tree = ", depth, ", Accuracy = ", acc * 100))
 
 
-def point_two():
+def point_two(file):
     print("\nPoint 2:")
+    file.write("\n\n\nPoint 2:")
     print("-------------------------------")
+    file.write("\n-------------------------------")
     ratio = 0.3
     for J in range(5):
         mean_depth, mean_acc, min_depth, min_acc, max_depth, max_acc = 0, 0, 17, 1, -1, -1
 
         print(" Report of five different random experiments with ratio  = ", ratio)
+        file.write("%s %s" % (" \n\nReport of five different random experiments with ratio  = ", ratio))
         for i in range(5):
             acc, depth = perform(ratio, data)
             if acc > max_acc:  max_acc = acc
@@ -157,15 +164,23 @@ def point_two():
         mean_acc /= 5
 
         print("  Mean Accuracy : ", mean_acc * 100)
+        file.write("%s %s" % (" \nMean Accuracy : ", mean_acc * 100))
         print("  Max Accuracy : ", max_acc * 100)
+        file.write("%s %s" % (" \nMax Accuracy : ", max_acc * 100))
         print("  Min Accuracy : ", min_acc * 100)
+        file.write("%s %s" % (" \nMin Accuracy : ", min_acc * 100))
         print("  Mean Depth : ", mean_depth)
+        file.write("%s %s" % (" \nMean Depth : ", mean_depth))
         print("  Max Depth : ", max_depth)
+        file.write("%s %s" % (" \nMax Depth : ", max_depth))
         print("  Min Depth : ", min_depth)
+        file.write("%s %s" % (" \nMin Depth : ", min_depth))
 
 
 data = pd.read_csv('house-votes.csv')
 data = add_missing_values(data)
 
-point_one()
-point_two()
+file = open("DECISION TREE.txt", "w")
+point_one(file)
+point_two(file)
+file.close()
