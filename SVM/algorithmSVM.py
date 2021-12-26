@@ -85,29 +85,41 @@ b = 0
 iterations = 800
 alphas = [0.001, 0.01, 0.03, 0.3]
 
+
 # start
-for a in alphas:
-    Arr_of_acc = []
-    features = []
+def run(file, b):
+    for a in alphas:
+        Arr_of_acc = []
+        features = []
 
-    for i in range(8):
-        X_train = Train_data[X[i]]
-        X_test = Test_data[X[i]]
+        for i in range(8):
+            X_train = Train_data[X[i]]
+            X_test = Test_data[X[i]]
 
-        X_train = np.array(Normalization(X_train))
-        X_test = np.array(Normalization(X_test))
+            X_train = np.array(Normalization(X_train))
+            X_test = np.array(Normalization(X_test))
 
-        w = np.zeros(np.size(X_train, 1))
+            w = np.zeros(np.size(X_train, 1))
 
-        (w, b) = gradient_descent(lamda, w, b, a, X_train, Y_train, iterations)
-        y_predict = prediction(w, X_test, b)
-        Acc = Accuracy(y_predict, Y_test)
+            (w, b) = gradient_descent(lamda, w, b, a, X_train, Y_train, iterations)
+            y_predict = prediction(w, X_test, b)
+            Acc = Accuracy(y_predict, Y_test)
 
-        Arr_of_acc.append(Acc)
-        features.append(X[i])
+            Arr_of_acc.append(Acc)
+            features.append(X[i])
 
-    max_acc = max(Arr_of_acc)
-    index = Arr_of_acc.index(max_acc)
-    print("###############################################################")
-    print("for alpha = ", a)
-    print("best features found:  ", features[index], "\n with accuracy = ", max_acc)
+        max_acc = max(Arr_of_acc)
+        index = Arr_of_acc.index(max_acc)
+
+        print("###############################################################")
+        file.write("\n############################################################")
+        print("for alpha = ", a)
+        file.write("\n%s %s" % ("for alpha = ", a))
+        print("best features found:  ", features[index], "\n with accuracy = ", max_acc)
+        file.write("\n%s %s %s %s" % ("best features found:  ", features[index], "\n with accuracy = ", max_acc))
+
+
+file = open("report.txt", "w")
+run(file, b)
+file.close()
+
