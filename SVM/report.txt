@@ -1,17 +1,17 @@
 
 ############################################################
 for alpha =  0.001
-best features found:   ['sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'slope', 'ca'] 
+best features found:   ['trestbps', 'fbs', 'thalach', 'exang', 'oldpeak'] 
  with accuracy =  0.8360655737704918
 ############################################################
 for alpha =  0.01
-best features found:   ['age', 'sex', 'cp', 'trestbps', 'chol', 'restecg', 'thalach', 'exang', 'oldpeak', 'ca'] 
- with accuracy =  0.8688524590163934
-############################################################
-for alpha =  0.03
-best features found:   ['sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'slope', 'ca'] 
+best features found:   ['sex', 'cp', 'trestbps', 'fbs', 'restecg', 'exang', 'ca'] 
  with accuracy =  0.8524590163934426
 ############################################################
+for alpha =  0.03
+best features found:   ['sex', 'cp', 'trestbps', 'fbs', 'restecg', 'exang', 'ca'] 
+ with accuracy =  0.8360655737704918
+############################################################
 for alpha =  0.3
-best features found:   ['sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'slope', 'ca'] 
- with accuracy =  0.8852459016393442
+best features found:   ['age', 'sex', 'cp', 'trestbps', 'chol', 'restecg', 'oldpeak', 'thal'] 
+ with accuracy =  0.7540983606557377

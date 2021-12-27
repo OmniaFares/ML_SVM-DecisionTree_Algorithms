@@ -2,52 +2,67 @@
 Point 1:
 ------------------------------- 
 Five different random experiments with ratio  =  0.25  
-Depth tree =  4 , Accuracy =  92.63803680981594   
-Depth tree =  5 , Accuracy =  94.78527607361963   
-Depth tree =  5 , Accuracy =  93.86503067484662   
-Depth tree =  5 , Accuracy =  95.70552147239265   
-Depth tree =  3 , Accuracy =  94.78527607361963 
+Depth tree =  7 , Accuracy =  93.55828220858896 , number of nodes =  27  
+Depth tree =  3 , Accuracy =  94.78527607361963 , number of nodes =  7  
+Depth tree =  3 , Accuracy =  94.78527607361963 , number of nodes =  7  
+Depth tree =  7 , Accuracy =  92.02453987730061 , number of nodes =  25  
+Depth tree =  7 , Accuracy =  94.78527607361963 , number of nodes =  29
 
 
 Point 2:
 ------------------------------- 
 
 Report of five different random experiments with ratio  =  0.3 
-Mean Accuracy :  94.0327868852459 
-Max Accuracy :  95.08196721311475 
-Min Accuracy :  92.78688524590164 
-Mean Depth :  5.4 
-Max Depth :  6 
-Min Depth :  3 
+Mean Accuracy :  93.18032786885246 
+Max Accuracy :  94.09836065573771 
+Min Accuracy :  92.45901639344262 
+Mean Depth :  6.0 
+Max Depth :  7 
+Min Depth :  5 
+Mean number of nodes :  19.8 
+Max number of nodes :  25 
+Min number of nodes :  11 
 
 Report of five different random experiments with ratio  =  0.4 
-Mean Accuracy :  93.10344827586206 
-Max Accuracy :  95.40229885057471 
-Min Accuracy :  90.80459770114942 
-Mean Depth :  7.0 
+Mean Accuracy :  92.26053639846742 
+Max Accuracy :  95.01915708812261 
+Min Accuracy :  90.42145593869732 
+Mean Depth :  6.0 
 Max Depth :  8 
-Min Depth :  6 
+Min Depth :  4 
+Mean number of nodes :  26.2 
+Max number of nodes :  41 
+Min number of nodes :  15 
 
 Report of five different random experiments with ratio  =  0.5 
-Mean Accuracy :  92.71889400921658 
-Max Accuracy :  94.47004608294931 
-Min Accuracy :  89.86175115207374 
-Mean Depth :  7.0 
-Max Depth :  8 
+Mean Accuracy :  93.5483870967742 
+Max Accuracy :  95.39170506912443 
+Min Accuracy :  92.16589861751152 
+Mean Depth :  7.8 
+Max Depth :  9 
 Min Depth :  6 
+Mean number of nodes :  38.6 
+Max number of nodes :  47 
+Min number of nodes :  27 
 
 Report of five different random experiments with ratio  =  0.6 
-Mean Accuracy :  93.10344827586206 
+Mean Accuracy :  93.33333333333333 
 Max Accuracy :  95.97701149425288 
-Min Accuracy :  89.08045977011494 
-Mean Depth :  7.2 
-Max Depth :  8 
-Min Depth :  5 
+Min Accuracy :  91.37931034482759 
+Mean Depth :  8.6 
+Max Depth :  10 
+Min Depth :  7 
+Mean number of nodes :  46.6 
+Max number of nodes :  51 
+Min number of nodes :  39 
 
 Report of five different random experiments with ratio  =  0.7 
-Mean Accuracy :  94.04580152671758 
+Mean Accuracy :  92.97709923664122 
 Max Accuracy :  95.41984732824427 
-Min Accuracy :  90.83969465648855 
-Mean Depth :  8.2 
-Max Depth :  10 
-Min Depth :  6
+Min Accuracy :  91.6030534351145 
+Mean Depth :  7.4 
+Max Depth :  8 
+Min Depth :  6 
+Mean number of nodes :  38.6 
+Max number of nodes :  49 
+Min number of nodes :  29
