@@ -92,7 +92,7 @@ def run(file, b):
         Arr_of_acc = []
         features = []
 
-        for i in range(8):
+        for i in range(9):
             X_train = Train_data[X[i]]
             X_test = Test_data[X[i]]
 
